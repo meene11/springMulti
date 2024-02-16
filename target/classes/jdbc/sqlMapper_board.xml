@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.com.mult.board">
+	<insert id="B_INSERT" parameterType="test.com.mult.board.BoardVO">
+		insert into
+		board(num,title,content,writer)
+		values(seq_board.nextval,#{title},#{content},#{writer})
+	</insert>
+
+	<update id="B_UPDATE">
+		update board set title=#{title},content=#{content},wdate=sysdate where num=#{num}
+	</update>
+
+	<delete id="B_DELETE">
+		delete from board where num=#{num}
+	</delete>
+
+	<select id="B_SELECT_ONE" resultType="test.com.mult.board.BoardVO">
+		select * from board where
+		num=#{num}
+	</select>
+
+	<select id="B_SELECT_ALL" resultType="test.com.mult.board.BoardVO">
+		select * from board order by
+		num desc
+	</select>
+
+	<select id="B_SELECT_ALL_PAGE_BLOCK"
+		resultType="test.com.mult.board.BoardVO">
+		select rnum,num,title ,content,writer,wdate
+		from (select
+		rownum rnum,num,title ,content,writer,wdate
+		from board
+		order by num
+		desc)
+		where rnum between #{startRow} and #{endRow}
+	</select>
+
+	<select id="B_SEARCHLIST_TITLE"
+		resultType="test.com.mult.board.BoardVO">
+		select * from board where title like #{searchWord} order by
+		num desc
+	</select>
+
+	<select id="B_SEARCHLIST_CONTENT"
+		resultType="test.com.mult.board.BoardVO">
+		select * from board where content like #{searchWord} order
+		by num desc
+	</select>
+
+	<select id="B_SEARCHLIST_PAGE_BLOCK_TITLE"
+		resultType="test.com.mult.board.BoardVO">
+		select rnum,num,title ,content,writer,wdate
+		from (select
+		rownum rnum,num,title ,content,writer,wdate
+		from board where title like
+		#{searchWord}
+		order by num desc)
+		where rnum between #{startRow} and
+		#{endRow}
+	</select>
+
+	<select id="B_SEARCHLIST_PAGE_BLOCK_CONTENT"
+		resultType="test.com.mult.board.BoardVO">
+		select rnum,num,title ,content,writer,wdate
+		from (select
+		rownum rnum,num,title ,content,writer,wdate
+		from board where content
+		like #{searchWord}
+		order by num desc)
+		where rnum between #{startRow} and
+		#{endRow}
+	</select>
+
+	<select id="B_TOTAL_ROWS" resultType="int">
+		select count(*) total_rows
+		from board
+	</select>
+
+	<select id="B_SEARCH_TOTAL_ROWS_TITLE" resultType="int">
+		select count(*)
+		total_rows from board where title like #{searchWord}
+	</select>
+
+	<select id="B_SEARCH_TOTAL_ROWS_CONTENT" resultType="int">
+		select
+		count(*) total_rows from board where content like #{searchWord}
+	</select>
+
+
+</mapper>
